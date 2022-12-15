@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>QGamble War</title>
+</head>
+<body>
+    <h1>Welcome to QGamble War</h1> 
+    <form action="/continueBetting" method="post">
+    <br><div style="font-size:x-large; color:blueviolet;">Chips: <input type="text" class="field left" id="chipCount" name="chipCount" readonly="readonly"> <p style="text-align:right"> <a href="/">Logout: Home Page</a></p></div>
+    <hr>
+    <h4 id="warDiscardD">Dealer Card:</h4><br>
+    <div id="dealer"></div><br>
+    <h4 id="warDiscard">Player Card:</h4><br>
+    <div id="player"></div><br>
+    <div id="game"></div>
+    <input type="submit" value="Next Game">
+    </form>
+  
+    <script>
+        const convertCard = {
+            ACE: 11,
+            KING: 10,
+            QUEEN: 10,
+            JACK: 10,
+            10: 10,
+            9: 9,
+            8: 8,
+            7: 7,
+            6: 6,
+            5: 5,
+            4: 4,
+            3: 3,
+            2: 2,
+        };
+        
+        function war(deck_id) {
+            fetch("https://deckofcardsapi.com/api/deck/" + deck_id + "/draw/?count=8").then(response => response.json())
+            .then(json => {
+                let count = 0;
+                document.getElementById("warDiscard").innerHTML += " WAR!: Discard 3 (Last Plays)";
+                document.getElementById("warDiscardD").innerHTML += " WAR!: Discard 3 (Last Plays)";
+                json.cards.forEach(obj => {
+                    var warImg = new Image();
+                    warImg.src = obj.image; 
+                    if (count % 2) {
+                        document.getElementById("dealer").appendChild(warImg);
+                    } else {
+                        document.getElementById("player").appendChild(warImg);
+                    }
+                    count +=1;
+                });
+                let playerCard = convertCard[json.cards[6].value];
+                let dealerCard = convertCard[json.cards[7].value];
+                var finalChips;
+                if (playerCard > dealerCard) {
+                    finalChips = 0 + <%- chips %> + <%- bet %> + <%- bet %>;
+                    document.getElementById("game").innerHTML = "Game Conclusion: Win After War " + <%- bet %>;
+                } else if (playerCard < dealerCard) {
+                    finalChips = 0 + <%- chips %>;
+                    document.getElementById("game").innerHTML = "Game Conclusion: Loss After War";
+                } else {
+                    war(json.deck_id);
+                }
+                document.getElementById("chipCount").value = finalChips;
+            });
+        }
+
+        //main
+        fetch(`https://deckofcardsapi.com/api/deck/new/shuffle`).then(response => response.json())
+        .then(json => {
+            fetch("https://deckofcardsapi.com/api/deck/" + json.deck_id + "/draw/?count=2").then(response => response.json())
+            .then(json2 => {
+
+                var playerImg = new Image();
+                playerImg.src = json2.cards[0].image;
+                var dealerImg = new Image();
+                dealerImg.src = json2.cards[1].image;
+
+                document.getElementById("player").appendChild(playerImg);
+                document.getElementById("dealer").appendChild(dealerImg);
+
+                const playerCard = convertCard[json2.cards[0].value];
+                const dealerCard = convertCard[json2.cards[1].value];
+                
+                var finalChips;
+                if (playerCard > dealerCard) {
+                    finalChips = 0 + <%- chips %> + <%- bet %> + <%- bet %>;
+                    document.getElementById("game").innerHTML = "Game Conclusion: Win " + <%- bet %>;
+                } else if (playerCard < dealerCard) {
+                    finalChips = 0 + <%- chips %>;
+                    document.getElementById("game").innerHTML = "Game Conclusion: Loss";
+                } else {
+                    war(json2.deck_id);
+                }
+                document.getElementById("chipCount").value = finalChips;
+            });
+        });
+    </script>
+</body>
+</html>

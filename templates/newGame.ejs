@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>QGamble War</title>
+</head>
+<body>
+    <h1>Welcome to QGamble War</h1>
+    <br><div style="font-size:x-large; color:blueviolet;">Chips: <%- chips %></div>
+    <hr>
+    <h4>How To Play: Dealer and Player will be randomly dealt a card from a newly shuffled deck. 
+        <br>The highest card wins. For Ties, 3 cards are discarded per player before given another card.</h4>
+    <form action="/betProcess" method="post"><div style="border: 1px solid black; padding: 1%; width:fit-content;">
+        <b><label>Please Bet On Hand: <input type="number" width="1rem" name="wager" min="0" max="<%- chips %>" required></label></b><br><br>
+    </div>
+    <input type="submit" value="Start Game">
+    <input type="reset" value="Reset">
+    </form><br><hr>
+    <a href="/">Logout: Home Page</a>
+</body>
+</html>
+    

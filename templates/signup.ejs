@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>QGamble Login</title>
+</head>
+<body>
+	<h1>Welcome to QGamble</h1>
+    <hr>
+    <h2>Please Sign up using your credentials.</h2>
+    <h3 style="color: red;"><b>IMPORTANT:</b> Please write down your Username and Password as lost accounts will not be recovered.</h3>
+    <hr>
+    <form action="/processSignup" method="post"><div style="border: 1px solid black; padding: 1%; width:fit-content;">
+        <b><label>UserName: <input type="text" name="username" required></label></b><br><br>
+        <b><label>Password: <input type="text" name="password" required></label></b><br><br>
+        </div><br>
+        <input type="submit" value="Sign Up">
+        <input type="reset" value="Reset">
+    </form><br><hr>
+    <h4>Already have an account? <br><a href="/login">Login</a>.</h4>
+    <hr>
+    <a href="/">Home Page</a>
+</body>
